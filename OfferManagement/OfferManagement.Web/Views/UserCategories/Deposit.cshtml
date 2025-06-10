@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Deposit Funds";
+}
+
+<h2>Deposit Funds</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+<form method="post">
+    <div class="form-group">
+        <label for="Amount">Amount to Deposit</label>
+        <input type="number" name="amount" id="Amount" class="form-control" required step="0.01" />
+    </div>
+    <button type="submit" class="btn btn-success">Deposit</button>
+</form>
+

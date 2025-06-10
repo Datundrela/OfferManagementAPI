@@ -1,0 +1,16 @@
+﻿@using OfferManagement.Application.Authentication.AuthServices.Models
+@model UserRegisterRequestModel
+
+<h2>Register</h2>
+
+<h3>User Registration</h3>
+<form asp-action="RegisterUser" method="post">
+    <input type="text" asp-for="FirstName" placeholder="First Name" required />
+    <input type="text" asp-for="LastName" placeholder="Last Name" required />
+    <input type="email" asp-for="Email" placeholder="Email" required />
+    <input type="password" asp-for="Password" placeholder="Password" required />
+    <button type="submit">Register as User</button>
+</form>
+
+
+

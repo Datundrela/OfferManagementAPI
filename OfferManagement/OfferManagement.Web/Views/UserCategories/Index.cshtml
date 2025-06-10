@@ -1,0 +1,87 @@
+﻿@using OfferManagement.Domain;
+@model UserCategoriesViewModel
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+@{
+    ViewData["Title"] = "Categories & Subscriptions";
+}
+<h3>Balance: @Model.Balance</h3>
+<a href="@Url.Action("Deposit", "UserCategories")" class="btn btn-primary">Deposit Funds</a>
+
+<h2>Categories</h2>
+<a href="@Url.Action("List", "Purchase")" class="btn btn-secondary">View Past Purchases</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>
+                    @if (Model.SubscribedCategoryIds.Contains(category.Id))
+                    {
+                        <form asp-action="Unsubscribe" asp-route-categoryId="@category.Id" method="post">
+                            <button type="submit" class="btn btn-danger">Unsubscribe</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="Subscribe" asp-route-categoryId="@category.Id" method="post">
+                            <button type="submit" class="btn btn-success">Subscribe</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Offers From Subscribed Categories</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Available Quantity</th>
+            <th>Expiry Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var offer in Model.Offers)
+        {
+            <tr>
+                <td>
+                    @if (offer.Image != null)
+                    {
+                        <img src="@offer.Image.FilePath" alt="Offer Image" width="200" />
+                    }
+                    else
+                    {
+                        <span>No image</span>
+                    }
+                </td>
+                <td>@offer.Title</td>
+                <td>@offer.Price</td>
+                <td>@offer.Quantity</td>
+                <td>@offer.ExpiryDate</td>
+                <td>
+                    <a href="@Url.Action("Buy", "Purchase", new { offerId = offer.Id })" class="btn btn-primary">Buy Offer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

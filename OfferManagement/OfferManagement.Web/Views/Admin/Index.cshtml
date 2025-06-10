@@ -1,0 +1,88 @@
+﻿@model AdminDashboardViewModel
+
+<h2>Admin Dashboard</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+<h3>Users</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Companies</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Company Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var company in Model.Companies)
+        {
+            <tr>
+                <td>@company.Name</td>
+                <td>@company.Email</td>
+                <td>@(company.IsActive ? "Active" : "Pending")</td>
+                <td>
+                    @if (!company.IsActive)
+                    {
+                        <form asp-action="ActivateCompany" asp-route-companyId="@company.Id" method="post">
+                            <button type="submit" class="btn btn-success">Activate</button>
+                        </form>
+                    } else
+                    {
+                        <form asp-action="DeactivateCompany" asp-route-companyId="@company.Id" method="post">
+                            <button type="submit" class="btn btn-danger">Deactivate</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Manage Categories</h3>
+
+<form asp-action="AddCategory" method="post">
+    <div class="form-group">
+        <label for="categoryName">New Category</label>
+        <input type="text" name="Name" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Category</button>
+</form>
+
+<h4>Existing Categories</h4>
+<ul class="list-group">
+    @foreach (var category in Model.Categories)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            @category.Name
+            <form asp-action="DeleteCategory" asp-route-categoryId="@category.Id" method="post">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </li>
+    }
+</ul>
+

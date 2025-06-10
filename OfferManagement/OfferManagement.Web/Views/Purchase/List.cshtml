@@ -1,0 +1,59 @@
+﻿@model PurchaseListViewModel
+
+@{
+    ViewData["Title"] = "Your Purchases";
+}
+
+<h2>Your Purchases</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Offer</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Purchase Date</th>
+            <th>Status</th>
+            <th>Cancel</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var purchase in Model.Purchases)
+        {
+            <tr>
+                <td>@purchase.OfferTitle</td>
+                <td>@purchase.TotalPrice</td>
+                <td>@purchase.Quantity</td>
+                <td>@purchase.PurchaseDate</td>
+                <td>
+                    @if (@purchase.IsRefunded){
+                        <h5>Refunded</h5>
+                    } else {
+                        if ((DateTime.UtcNow - purchase.PurchaseDate).TotalMinutes < 5)
+                        {
+                            <h5>Refundable</h5>
+                        } else
+                        {
+                            <h5>Can not be Refunded</h5>
+                        }
+                    }
+                </td>
+                <td>
+                    @if ((DateTime.UtcNow - purchase.PurchaseDate).TotalMinutes < 5 & !purchase.IsRefunded)
+                    {
+                        <form asp-action="CancelPurchase" asp-route-purchaseId="@purchase.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger">Cancel</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

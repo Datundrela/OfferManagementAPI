@@ -1,0 +1,10 @@
+﻿@using OfferManagement.Application.Authentication.AuthServices.Models
+@model CompanyRegisterRequestModel
+
+<h3>Company Registration</h3>
+<form asp-action="RegisterCompany" method="post">
+    <input type="text" asp-for="Name" placeholder="Company Name" required />
+    <input type="email" asp-for="Email" placeholder="Email" required />
+    <input type="password" asp-for="Password" placeholder="Password" required />
+    <button type="submit">Register as Company</button>
+</form>
