@@ -1,0 +1,15 @@
+﻿@using OfferManagement.Application.Authentication.AuthServices.Models
+@model LoginRequestModel
+
+<h2>Login</h2>
+<form method="post">
+    <label>Email:</label>
+    <input type="email" asp-for="Email" required />
+    <span asp-validation-for="Email"></span>
+
+    <label>Password:</label>
+    <input type="password" asp-for="Password" required />
+    <span asp-validation-for="Password"></span>
+
+    <button type="submit">Login</button>
+</form>

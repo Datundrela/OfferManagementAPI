@@ -1,0 +1,149 @@
+﻿@using OfferManagement.Application.EntityServices.Offers.Models;
+@using OfferManagement.Domain;
+@model List<OfferDTO>
+@{
+    ViewData["Title"] = "My Offers";
+}
+
+<h2>Manage Your Offers</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+<h3>Add New Offer</h3>
+<form asp-action="Add" asp-controller="CompanyOffers" method="post" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="Title" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <textarea name="Description" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Price</label>
+        <input type="number" name="Price" class="form-control" step="0.01" required />
+    </div>
+    <div class="form-group">
+        <label>Quantity</label>
+        <input type="number" name="Quantity" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Expiry Date</label>
+        <input type="datetime-local" name="ExpiryDate" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Category</label>
+        <input type="number" name="CategoryId" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Offer Image</label>
+        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+    </div>
+    <button type="submit" class="btn btn-success">Add Offer</button>
+</form>
+
+<hr>
+
+<h3>Active Offers</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Expiry Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var offer in Model.Where(o => o.OfferStatus == OfferStatus.Active))
+            {
+                <tr>
+                    <td>
+                        @if (offer.Image != null)
+                        {
+                            <img src="@offer.Image.FilePath" alt="Offer Image" width="200" />
+                        } else
+                        {
+                            <span>No image</span>
+                        }
+                    </td>
+                    <td>@offer.Title</td>
+                    <td>@offer.Price</td>
+                    <td>@offer.Quantity</td>
+                    <td>@offer.ExpiryDate</td>
+                    <td>
+                        @if((DateTime.UtcNow - offer.UploadDate).TotalMinutes < 10)
+                        {
+                            <form asp-action="Cancel" asp-controller="CompanyOffers" method="post">
+                                <input type="hidden" name="offerId" value="@offer.Id" />
+                                <button type="submit" class="btn btn-danger">Cancel</button>
+                            </form>
+                        } else
+                        {
+                            <h5>No longer Cancellable</h5>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">No active offers available.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Archived Offers</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Expiry Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var offer in Model.Where(o => o.OfferStatus == OfferStatus.Expired))
+            {
+                <tr>
+                    <td>
+                        @if (offer.Image != null)
+                        {
+                                        <img src="@offer.Image.FilePath" alt="Offer Image" width="200" />
+                        }
+                        else
+                        {
+                                        <span>No image</span>
+                        }
+                    </td>
+                    <td>@offer.Title</td>
+                    <td>@offer.Price</td>
+                    <td>@offer.Quantity</td>
+                    <td>@offer.ExpiryDate</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No archived offers available.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
